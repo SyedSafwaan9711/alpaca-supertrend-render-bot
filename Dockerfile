@@ -1,7 +1,10 @@
-FROM python:3.7.6
+FROM python:3.11-slim
 
-ADD crypto_bot.py .
+WORKDIR /app
 
-RUN pip install alpaca-trade-api
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD [ "python", "./crypto_bot.py" ]
+COPY . .
+
+CMD ["python", "app.py"]

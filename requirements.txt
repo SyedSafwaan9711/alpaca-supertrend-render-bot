@@ -1,1 +1,9 @@
-alpaca_trade_api==1.5.0
+alpaca-py>=0.33,<1.0
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.34,<1.0
+pydantic>=2.10,<3
+pandas>=2.2,<3
+numpy>=1.26,<3
+python-dotenv>=1.0,<2
+httpx>=0.27,<1
+pytest>=8.3,<9
