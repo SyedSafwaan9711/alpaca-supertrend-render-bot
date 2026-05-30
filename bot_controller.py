@@ -149,8 +149,10 @@ class BotController:
         return await self.executor.close_position(symbol)
 
     def health(self) -> dict:
+        bot_loop_ok = self.risk.consecutive_failures < self.risk.max_consecutive_failures
         return {
-            "ok": self.risk.consecutive_failures < self.risk.max_consecutive_failures,
+            "ok": True,
+            "bot_loop_ok": bot_loop_ok,
             "bot_mode": self.config.bot_mode,
             "trading_mode": self.config.trading_mode,
             "dry_run": self.config.dry_run,

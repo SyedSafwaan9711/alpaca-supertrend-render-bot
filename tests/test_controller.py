@@ -132,3 +132,19 @@ def test_start_keeps_service_alive_when_alpaca_auth_fails():
 
     assert controller.health()["authenticated"] is False
     assert "invalid credentials" in controller.status()["auth_status"]["error"]
+
+
+def test_health_reports_loop_state_without_failing_http_healthcheck():
+    controller = BotController(
+        config(),
+        market=FakeMarket(),
+        strategy=FakeStrategy(),
+        executor=FakeExecutor(),
+    )
+    for _ in range(controller.risk.max_consecutive_failures):
+        controller.risk.record_api_failure()
+
+    health = controller.health()
+
+    assert health["ok"] is True
+    assert health["bot_loop_ok"] is False
