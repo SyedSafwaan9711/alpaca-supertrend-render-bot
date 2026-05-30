@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: alpaca-supertrend-bot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    healthCheckPath: /health
+    envVars:
+      - key: ALPACA_API_KEY
+        sync: false
+      - key: ALPACA_SECRET_KEY
+        sync: false
+      - key: ALPACA_BASE_URL
+        value: https://paper-api.alpaca.markets
+      - key: TRADING_MODE
+        value: paper
+      - key: BOT_MODE
+        value: ASSIST
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: SYMBOLS
+        value: BTC/USD
+      - key: TIMEFRAME
+        value: 1Min
+      - key: POSITION_SIZE_PCT
+        value: "1"
+      - key: MAX_DAILY_LOSS_PCT
+        value: "5"
+      - key: COOLDOWN_MINUTES
+        value: "10"
+      - key: MAX_OPEN_POSITIONS
+        value: "1"
+      - key: ORDER_INTERVAL_SECONDS
+        value: "60"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DRY_RUN
+        value: "true"
+      - key: ALLOW_LIVE_TRADING
+        value: "false"
