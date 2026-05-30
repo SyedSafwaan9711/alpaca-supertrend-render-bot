@@ -26,6 +26,11 @@ class FakeMarket:
         return []
 
 
+class FailingAuthMarket(FakeMarket):
+    async def authenticate(self):
+        raise RuntimeError("invalid credentials")
+
+
 class FakeStrategy:
     def evaluate(self, bars, position_qty, symbol="BTC/USD"):
         return StrategyDecision(
@@ -109,3 +114,21 @@ def test_pause_and_emergency_stop_prevent_auto_orders():
     assert executor.buy_calls == []
     assert controller.status()["auto_paused"] is True
     assert controller.status()["risk"]["emergency_stop"] is True
+
+
+def test_start_keeps_service_alive_when_alpaca_auth_fails():
+    controller = BotController(
+        config(order_interval_seconds=1),
+        market=FailingAuthMarket(),
+        strategy=FakeStrategy(),
+        executor=FakeExecutor(),
+    )
+
+    async def run_start_stop():
+        await controller.start()
+        await controller.stop()
+
+    asyncio.run(run_start_stop())
+
+    assert controller.health()["authenticated"] is False
+    assert "invalid credentials" in controller.status()["auth_status"]["error"]

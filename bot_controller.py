@@ -37,7 +37,13 @@ class BotController:
 
     async def start(self) -> None:
         if not self.authenticated:
-            await self.authenticate()
+            try:
+                await self.authenticate()
+            except Exception as exc:
+                self.authenticated = False
+                self.auth_status = {"error": str(exc)}
+                self.risk.record_api_failure()
+                logger.exception("Alpaca authentication failed; service will stay up")
         self._stop_event.clear()
         self._task = asyncio.create_task(self.run_forever())
 
