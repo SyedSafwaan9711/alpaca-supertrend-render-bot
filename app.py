@@ -30,7 +30,7 @@ def main() -> None:
     configure_logging(config.log_level)
     controller = build_controller(config)
     app = create_app(config, controller, manage_lifecycle=True)
-    uvicorn.run(app, host="0.0.0.0", port=config.port)
+    uvicorn.run(app, host=config.host, port=config.port)
 
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@ def test_load_config_uses_safe_defaults():
     assert config.position_size_pct == 1.0
     assert config.max_open_positions == 1
     assert config.dry_run is True
+    assert config.host == "0.0.0.0"
 
 
 def test_load_config_rejects_missing_secrets():

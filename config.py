@@ -31,6 +31,7 @@ class BotConfig:
     log_level: str
     dry_run: bool
     port: int
+    host: str = "0.0.0.0"
     allow_live_trading: bool = False
 
 
@@ -62,6 +63,7 @@ def load_config(env: Mapping[str, str] | None = None) -> BotConfig:
         order_interval_seconds=_int_range(env, "ORDER_INTERVAL_SECONDS", 60, minimum=1, maximum=86400),
         log_level=_string(env, "LOG_LEVEL", "INFO").upper(),
         dry_run=_bool(env, "DRY_RUN", True),
+        host=_string(env, "HOST", "0.0.0.0"),
         port=_int_range(env, "PORT", 8000, minimum=1, maximum=65535),
         allow_live_trading=allow_live_trading,
     )
@@ -85,6 +87,7 @@ def config_as_env(config: BotConfig, *, trading_mode: str | None = None) -> dict
         "ORDER_INTERVAL_SECONDS": str(config.order_interval_seconds),
         "LOG_LEVEL": config.log_level,
         "DRY_RUN": str(config.dry_run).lower(),
+        "HOST": config.host,
         "PORT": str(config.port),
         "ALLOW_LIVE_TRADING": str(config.allow_live_trading).lower(),
     }
