@@ -42,7 +42,7 @@ def load_config(env: Mapping[str, str] | None = None) -> BotConfig:
 
     trading_mode = _choice(env, "TRADING_MODE", "paper", {"paper", "live"}).lower()
     bot_mode = _choice(env, "BOT_MODE", "ASSIST", {"ASSIST", "AUTO"}).upper()
-    base_url = _string(env, "ALPACA_BASE_URL", PAPER_BASE_URL).rstrip("/")
+    base_url = _normalize_base_url(_string(env, "ALPACA_BASE_URL", PAPER_BASE_URL))
     allow_live_trading = _bool(env, "ALLOW_LIVE_TRADING", False)
 
     _validate_base_url(trading_mode, base_url, allow_live_trading)
@@ -171,6 +171,13 @@ def _normalize_symbol(symbol: str) -> str:
     value = symbol.upper().replace("-", "/")
     if "/" not in value and value.endswith("USD"):
         return f"{value[:-3]}/USD"
+    return value
+
+
+def _normalize_base_url(base_url: str) -> str:
+    value = base_url.rstrip("/")
+    if value.endswith("/v2"):
+        return value.removesuffix("/v2")
     return value
 
 

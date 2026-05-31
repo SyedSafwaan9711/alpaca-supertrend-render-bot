@@ -27,6 +27,12 @@ def test_load_config_uses_safe_defaults():
     assert config.host == "0.0.0.0"
 
 
+def test_load_config_accepts_dashboard_v2_endpoint():
+    config = load_config(base_env(ALPACA_BASE_URL="https://paper-api.alpaca.markets/v2"))
+
+    assert config.alpaca_base_url == "https://paper-api.alpaca.markets"
+
+
 def test_load_config_rejects_missing_secrets():
     with pytest.raises(ConfigError, match="ALPACA_API_KEY"):
         load_config(base_env(ALPACA_API_KEY=""))
